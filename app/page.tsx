@@ -201,7 +201,7 @@ export default function Home() {
         {/* Buy $KB Icon */}
         <button
           className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://kuru.io", "_blank")}
+          onClick={() => window.open("https://www.kuru.io/trade/0x87504a458776c27b17134b48317117e5aeb445e5", "_blank")}
         >
           <div className="w-12 h-12 relative">
             <Image src="/kb-logo.png" alt="KB Logo" fill className="object-contain" />
@@ -283,7 +283,7 @@ export default function Home() {
             <div className="mt-8 flex justify-center">
               <Button
                 className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold text-lg px-8 py-6"
-                onClick={() => window.open("https://kuru.io", "_blank")}
+                onClick={() => window.open("https://www.kuru.io/trade/0x87504a458776c27b17134b48317117e5aeb445e5", "_blank")}
               >
                 BUY $KB
               </Button>
