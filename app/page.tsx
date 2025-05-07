@@ -8,6 +8,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import WindowsWindow from "@/components/windows-window"
 import { Input } from "@/components/ui/input"
+import { motion } from "framer-motion"
 
 export default function Home() {
   const [activeWindow, setActiveWindow] = useState<string | null>(null)
@@ -15,6 +16,7 @@ export default function Home() {
   const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [currentTime, setCurrentTime] = useState(new Date())
+  const [lastClickedIcon, setLastClickedIcon] = useState<string | null>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
 
   // URL actualizada para comprar $MONI
@@ -45,6 +47,29 @@ export default function Home() {
     if (e.key === "Enter") {
       handleLogin()
     }
+  }
+
+  const handleIconClick = (windowName: string) => {
+    setLastClickedIcon(windowName)
+    setActiveWindow(windowName)
+
+    // Resetear el estado después de la animación
+    setTimeout(() => {
+      setLastClickedIcon(null)
+    }, 300)
+  }
+
+  // Variantes de animación para los iconos (estilo Windows 7 pero manteniendo apariencia XP)
+  const iconVariants = {
+    normal: { scale: 1 },
+    clicked: {
+      scale: [1, 0.95, 1],
+      transition: {
+        duration: 0.25, // Velocidad normal (1x)
+        times: [0, 0.5, 1],
+        ease: "easeInOut",
+      },
+    },
   }
 
   if (!loggedIn) {
@@ -108,86 +133,134 @@ export default function Home() {
 
       {/* Desktop Icons */}
       <div className="relative z-10 min-h-[calc(100vh-40px)] p-4 grid grid-cols-6 gap-4 content-start">
-        {/* MONI X Account Icon - Ahora en la esquina superior izquierda */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://x.com/MonadMoni", "_blank")}
+        {/* MONI X Account Icon - Corregida la alineación */}
+        <motion.div
+          className="flex flex-col items-center justify-start h-24 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "moni-x" ? "clicked" : "normal"}
         >
-          <div className="w-12 h-12 relative">
-            <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">MONI X Account</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => window.open("https://x.com/MonadMoni", "_blank")}
+          >
+            <div className="w-12 h-12 relative">
+              <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 text-center">MONI X Account</span>
+          </button>
+        </motion.div>
 
-        {/* Creator Icon - Ahora al lado de MONI X Account */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://x.com/facugod0", "_blank")}
+        {/* Creator Icon */}
+        <motion.div
+          className="flex flex-col items-center justify-start h-24 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "creator" ? "clicked" : "normal"}
         >
-          <div className="w-12 h-12 relative">
-            <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">Creator</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => window.open("https://x.com/facugod0", "_blank")}
+          >
+            <div className="w-12 h-12 relative">
+              <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 text-center">Creator</span>
+          </button>
+        </motion.div>
 
         {/* Monad Icon */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://testnet.monad.xyz", "_blank")}
+        <motion.div
+          className="flex flex-col items-center justify-start h-24 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "monad" ? "clicked" : "normal"}
         >
-          <div className="w-12 h-12 relative">
-            <Image src="/monad-logo.png" alt="Monad Logo" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">Monad</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => window.open("https://testnet.monad.xyz", "_blank")}
+          >
+            <div className="w-12 h-12 relative">
+              <Image src="/monad-logo.png" alt="Monad Logo" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 text-center">Monad</span>
+          </button>
+        </motion.div>
 
-        {/* Buy $MONI Icon - Actualizado con el nuevo logo de Kuru */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open(buyMoniUrl, "_blank")}
+        {/* Buy $MONI Icon */}
+        <motion.div
+          className="flex flex-col items-center justify-start h-24 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "buy-moni" ? "clicked" : "normal"}
         >
-          <div className="w-12 h-12 relative bg-[#c1ff72] rounded-lg flex items-center justify-center">
-            <Image src="/kuru-logo.png" alt="Kuru Logo" width={32} height={32} className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">Buy $MONI</span>
-        </button>
+          <button className="flex flex-col items-center w-full" onClick={() => window.open(buyMoniUrl, "_blank")}>
+            <div className="w-12 h-12 relative bg-[#c1ff72] rounded-lg flex items-center justify-center">
+              <Image src="/kuru-logo.png" alt="Kuru Logo" width={32} height={32} className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 text-center">Buy $MONI</span>
+          </button>
+        </motion.div>
 
         {/* Recycle Bin Icon */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => setActiveWindow("recyclebin")}
+        <motion.div
+          className="flex flex-col items-center justify-start h-24 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "recyclebin" ? "clicked" : "normal"}
         >
-          <div className="w-12 h-12 relative">
-            <Image src="/recycle-bin.png" alt="Recycle Bin" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">Recycle Bin</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => {
+              setLastClickedIcon("recyclebin")
+              handleIconClick("recyclebin")
+            }}
+          >
+            <div className="w-12 h-12 relative">
+              <Image src="/recycle-bin.png" alt="Recycle Bin" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 text-center">Recycle Bin</span>
+          </button>
+        </motion.div>
       </div>
 
       {/* Center File Icon */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => setActiveWindow("home")}
+        <motion.div
+          className="flex flex-col items-center justify-start p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "home" ? "clicked" : "normal"}
         >
-          <div className="w-16 h-16 relative">
-            <Image src="/txt-file.png" alt="Text File" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm font-bold">OPEN ME</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => {
+              setLastClickedIcon("home")
+              handleIconClick("home")
+            }}
+          >
+            <div className="w-16 h-16 relative">
+              <Image src="/txt-file.png" alt="Text File" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 font-bold text-center">OPEN ME</span>
+          </button>
+        </motion.div>
       </div>
 
       {/* WinRAR Icon (Bottom Right) */}
       <div className="absolute bottom-16 right-4 z-10">
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => setActiveWindow("us-heart")}
+        <motion.div
+          className="flex flex-col items-center justify-start p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          variants={iconVariants}
+          animate={lastClickedIcon === "us-heart" ? "clicked" : "normal"}
         >
-          <div className="w-16 h-16 relative">
-            <Image src="/winrar.png" alt="WinRAR" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm font-bold">?</span>
-        </button>
+          <button
+            className="flex flex-col items-center w-full"
+            onClick={() => {
+              setLastClickedIcon("us-heart")
+              handleIconClick("us-heart")
+            }}
+          >
+            <div className="w-16 h-16 relative">
+              <Image src="/winrar.png" alt="WinRAR" fill className="object-contain" />
+            </div>
+            <span className="text-white text-shadow text-sm mt-1 font-bold text-center">?</span>
+          </button>
+        </motion.div>
       </div>
 
       {/* Windows */}
@@ -287,7 +360,10 @@ export default function Home() {
         <div className="flex items-center h-full">
           <button
             className="bg-gradient-to-b from-[#3c8f3c] to-[#1e6b1e] text-white font-bold px-4 h-8 rounded-md ml-1 flex items-center gap-2 hover:from-[#4ca54c] hover:to-[#2a7a2a]"
-            onClick={() => setActiveWindow("home")}
+            onClick={() => {
+              setLastClickedIcon("start")
+              handleIconClick("home")
+            }}
           >
             <div className="w-4 h-4 relative mr-1">
               <Image src="/moni-logo.png" alt="MONI Logo" fill className="object-contain" />
