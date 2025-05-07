@@ -15,39 +15,15 @@ export default function Home() {
   const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [currentTime, setCurrentTime] = useState(new Date())
-  const startupSoundRef = useRef<HTMLAudioElement>(null)
-  const logonSoundRef = useRef<HTMLAudioElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
-  const [soundsLoaded, setSoundsLoaded] = useState(false)
+
+  // URL actualizada para comprar $MONI
+  const buyMoniUrl = "https://www.kuru.io/trade/0xe00146b6a0fb6faa969120f031166fd22468b79c"
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
-
-    // Verificar si los archivos de audio existen
-    const checkAudioFiles = async () => {
-      try {
-        // Comprobar si los archivos existen sin intentar reproducirlos
-        const logonResponse = await fetch("/windows-xp-logon.mp3", { method: "HEAD" })
-        const startupResponse = await fetch("/windows-xp-startup.mp3", { method: "HEAD" })
-
-        if (logonResponse.ok && startupResponse.ok) {
-          setSoundsLoaded(true)
-          console.log("Audio files loaded successfully")
-        } else {
-          console.error(
-            "Audio files not found:",
-            logonResponse.ok ? "" : "logon sound missing",
-            startupResponse.ok ? "" : "startup sound missing",
-          )
-        }
-      } catch (error) {
-        console.error("Error checking audio files:", error)
-      }
-    }
-
-    checkAudioFiles()
 
     return () => {
       clearInterval(timer)
@@ -58,21 +34,6 @@ export default function Home() {
     if (password === "I WILL BE RUGGED") {
       setLoggedIn(true)
       setPasswordError("")
-
-      // Solo intentar reproducir sonidos si están cargados
-      if (soundsLoaded) {
-        // Play Windows XP logon sound
-        if (logonSoundRef.current) {
-          logonSoundRef.current.play().catch((e) => console.error("Error playing logon sound:", e))
-        }
-
-        // Play Windows XP startup sound after login
-        setTimeout(() => {
-          if (startupSoundRef.current) {
-            startupSoundRef.current.play().catch((e) => console.error("Error playing startup sound:", e))
-          }
-        }, 1500)
-      }
     } else if (password === "i will be rugged" || password === "I will be rugged") {
       setPasswordError("Enter it in CAPITAL LETTERS")
     } else {
@@ -89,29 +50,11 @@ export default function Home() {
   if (!loggedIn) {
     return (
       <div className="min-h-screen flex flex-col bg-[#235abd] text-white font-windows">
-        {/* Cargar audio solo si los archivos existen */}
-        {soundsLoaded && (
-          <>
-            <audio
-              ref={logonSoundRef}
-              src="/windows-xp-logon.mp3"
-              preload="auto"
-              onError={(e) => console.error("Error loading logon sound:", e)}
-            />
-            <audio
-              ref={startupSoundRef}
-              src="/windows-xp-startup.mp3"
-              preload="auto"
-              onError={(e) => console.error("Error loading startup sound:", e)}
-            />
-          </>
-        )}
-
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-[#0c57d0] border-2 border-white rounded-lg shadow-lg p-8 w-[400px] max-w-[90vw]">
             <div className="flex items-center mb-6">
               <div className="w-20 h-20 relative mr-4 border-2 border-white rounded-lg overflow-hidden">
-                <Image src="/user-avatar.png" alt="User Avatar" fill className="object-cover" />
+                <Image src="/moni-logo.png" alt="MONI Logo" fill className="object-cover" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold">nad</h2>
@@ -165,15 +108,26 @@ export default function Home() {
 
       {/* Desktop Icons */}
       <div className="relative z-10 min-h-[calc(100vh-40px)] p-4 grid grid-cols-6 gap-4 content-start">
-        {/* KryptoBaby777 Icon */}
+        {/* MONI X Account Icon - Ahora en la esquina superior izquierda */}
         <button
           className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://x.com/kryptobaby777", "_blank")}
+          onClick={() => window.open("https://x.com/MonadMoni", "_blank")}
         >
           <div className="w-12 h-12 relative">
             <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
           </div>
-          <span className="text-white text-shadow text-sm">KryptoBaby777</span>
+          <span className="text-white text-shadow text-sm">MONI X Account</span>
+        </button>
+
+        {/* Creator Icon - Ahora al lado de MONI X Account */}
+        <button
+          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          onClick={() => window.open("https://x.com/facugod0", "_blank")}
+        >
+          <div className="w-12 h-12 relative">
+            <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
+          </div>
+          <span className="text-white text-shadow text-sm">Creator</span>
         </button>
 
         {/* Monad Icon */}
@@ -187,30 +141,22 @@ export default function Home() {
           <span className="text-white text-shadow text-sm">Monad</span>
         </button>
 
-        {/* Creator Icon */}
+        {/* Buy $MONI Icon - Actualizado con el nuevo logo de Kuru */}
         <button
           className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://x.com/facugod0", "_blank")}
+          onClick={() => window.open(buyMoniUrl, "_blank")}
         >
-          <div className="w-12 h-12 relative">
-            <Image src="/x-logo.png" alt="X Logo" fill className="object-contain" />
+          <div className="w-12 h-12 relative bg-[#c1ff72] rounded-lg flex items-center justify-center">
+            <Image src="/kuru-logo.png" alt="Kuru Logo" width={32} height={32} className="object-contain" />
           </div>
-          <span className="text-white text-shadow text-sm">Creator</span>
-        </button>
-
-        {/* Buy $KB Icon */}
-        <button
-          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
-          onClick={() => window.open("https://www.kuru.io/trade/0x87504a458776c27b17134b48317117e5aeb445e5", "_blank")}
-        >
-          <div className="w-12 h-12 relative">
-            <Image src="/kb-logo.png" alt="KB Logo" fill className="object-contain" />
-          </div>
-          <span className="text-white text-shadow text-sm">Buy $KB</span>
+          <span className="text-white text-shadow text-sm">Buy $MONI</span>
         </button>
 
         {/* Recycle Bin Icon */}
-        <button className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24">
+        <button
+          className="flex flex-col items-center justify-center gap-2 p-2 rounded hover:bg-blue-500/20 transition-colors w-24"
+          onClick={() => setActiveWindow("recyclebin")}
+        >
           <div className="w-12 h-12 relative">
             <Image src="/recycle-bin.png" alt="Recycle Bin" fill className="object-contain" />
           </div>
@@ -247,33 +193,42 @@ export default function Home() {
       {/* Windows */}
       {activeWindow === "home" && (
         <WindowsWindow
-          title="KryptoBaby777 - $KB"
+          title="MONI on Monad - $MONI"
           onClose={() => setActiveWindow(null)}
           className=""
-          backgroundImage="/pikachu-bg.png"
+          backgroundImage="/moni-science.png"
+          logo="/moni-logo.png"
         >
           <div className="p-6 text-center">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4 text-yellow-300 animate-pulse">$KB</h1>
-              <p className="text-xl mb-6">$KB is just for fun and to glorify KryptoBaby777, have fun.</p>
-              <div className="bg-black/50 p-4 rounded-lg mb-8 border-2 border-yellow-500/50">
-                <p className="text-lg italic text-yellow-200">
-                  We love Pikachu, we love KB, it's just a meme, you'll be rugged, probably nothing.
+              <div className="flex justify-center mb-4">
+                <div className="w-24 h-24 relative">
+                  <Image src="/moni-logo.png" alt="MONI Logo" fill className="object-contain" />
+                </div>
+              </div>
+              <h1 className="text-4xl font-bold mb-4 text-purple-300 animate-pulse">$MONI</h1>
+              <p className="text-xl mb-6">
+                Moni is a mischievous yet brilliant character from the Monad world - always building, coding, and
+                plotting something unexpected in the name of fun and freedom.
+              </p>
+              <div className="bg-black/70 p-4 rounded-lg mb-8 border-2 border-purple-500/50">
+                <p className="text-lg italic text-purple-200">
+                  We love MONI, we love MONAD, it's just a meme, you'll be rugged, probably nothing.
                 </p>
               </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-yellow-500/20 p-4 rounded-lg border border-yellow-500/50">
-                <h2 className="text-xl font-bold mb-2 text-yellow-300">About $KB</h2>
-                <p>
+              <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-500/50">
+                <h2 className="text-xl font-bold mb-2 text-purple-300">About $MONI</h2>
+                <p className="text-purple-100">
                   This is a meme token. It has no value. It has no utility. It's just for fun. Don't invest your life
                   savings.
                 </p>
               </div>
-              <div className="bg-red-500/20 p-4 rounded-lg border border-red-500/50">
-                <h2 className="text-xl font-bold mb-2 text-red-300">Warning</h2>
-                <p>
+              <div className="bg-purple-800/30 p-4 rounded-lg border border-purple-400/50">
+                <h2 className="text-xl font-bold mb-2 text-purple-300">Warning</h2>
+                <p className="text-purple-100">
                   This is not financial advice. DYOR. You will probably lose all your money. But at least you'll have
                   fun!
                 </p>
@@ -282,24 +237,37 @@ export default function Home() {
 
             <div className="mt-8 flex justify-center">
               <Button
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold text-lg px-8 py-6"
-                onClick={() => window.open("https://www.kuru.io/trade/0x87504a458776c27b17134b48317117e5aeb445e5", "_blank")}
+                className="bg-[#c1ff72] hover:bg-[#a8e65a] text-black font-bold text-lg px-8 py-6 flex items-center gap-2"
+                onClick={() => window.open(buyMoniUrl, "_blank")}
               >
-                BUY $KB
+                <Image src="/kuru-logo.png" alt="Kuru Logo" width={24} height={24} className="object-contain" />
+                BUY $MONI
               </Button>
             </div>
 
             <div className="mt-8 flex justify-center">
               <Link
-                href="https://x.com/kryptobaby777"
+                href="https://x.com/MonadMoni"
                 target="_blank"
-                className="flex items-center gap-2 text-blue-400 hover:text-blue-300"
+                className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300"
               >
                 <Image src="/x-logo.png" alt="X Logo" width={20} height={20} className="object-contain" />
-                <span>Follow @kryptobaby777</span>
+                <span>Follow @MonadMoni</span>
               </Link>
             </div>
           </div>
+        </WindowsWindow>
+      )}
+
+      {/* Recycle Bin Window */}
+      {activeWindow === "recyclebin" && (
+        <WindowsWindow
+          title="Notepad - Here is Megaeth LMAO.txt"
+          onClose={() => setActiveWindow(null)}
+          className=""
+          isNotepad={true}
+        >
+          <div className="p-4 font-mono text-black bg-white h-[300px] w-full">Here is Megaeth LMAO</div>
         </WindowsWindow>
       )}
 
@@ -321,12 +289,26 @@ export default function Home() {
             className="bg-gradient-to-b from-[#3c8f3c] to-[#1e6b1e] text-white font-bold px-4 h-8 rounded-md ml-1 flex items-center gap-2 hover:from-[#4ca54c] hover:to-[#2a7a2a]"
             onClick={() => setActiveWindow("home")}
           >
+            <div className="w-4 h-4 relative mr-1">
+              <Image src="/moni-logo.png" alt="MONI Logo" fill className="object-contain" />
+            </div>
             <span className="text-sm">start</span>
           </button>
 
           {activeWindow && (
             <div className="bg-[#3c77d9] ml-2 px-4 h-8 rounded-t-md text-white flex items-center">
-              <span className="text-sm">{activeWindow === "home" ? "KryptoBaby777 - $KB" : "us <3"}</span>
+              {activeWindow === "home" && (
+                <div className="w-4 h-4 relative mr-2">
+                  <Image src="/moni-logo.png" alt="MONI Logo" fill className="object-contain" />
+                </div>
+              )}
+              <span className="text-sm">
+                {activeWindow === "home"
+                  ? "MONI on Monad - $MONI"
+                  : activeWindow === "recyclebin"
+                    ? "Notepad - Here is Megaeth LMAO.txt"
+                    : "us <3"}
+              </span>
             </div>
           )}
 

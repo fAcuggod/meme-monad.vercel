@@ -13,9 +13,19 @@ interface WindowsWindowProps {
   children: React.ReactNode
   className?: string
   backgroundImage?: string
+  isNotepad?: boolean
+  logo?: string
 }
 
-export default function WindowsWindow({ title, onClose, children, className, backgroundImage }: WindowsWindowProps) {
+export default function WindowsWindow({
+  title,
+  onClose,
+  children,
+  className,
+  backgroundImage,
+  isNotepad,
+  logo,
+}: WindowsWindowProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [offset, setOffset] = useState({ x: 0, y: 0 })
@@ -89,7 +99,7 @@ export default function WindowsWindow({ title, onClose, children, className, bac
       className={cn("bg-[#ece9d8] border-2 border-[#0c3d99] rounded shadow-xl overflow-hidden fixed", className)}
       style={{
         zIndex: 1000,
-        width: "500px", // Tamaño fijo más pequeño
+        width: isNotepad ? "600px" : "500px", // Tamaño fijo más pequeño
         maxWidth: "90vw",
       }}
     >
@@ -97,6 +107,11 @@ export default function WindowsWindow({ title, onClose, children, className, bac
         className="window-header bg-gradient-to-r from-[#2a5ede] to-[#5a93ee] text-white font-bold p-1 flex items-center"
         onMouseDown={handleMouseDown}
       >
+        {logo && (
+          <div className="w-5 h-5 relative ml-1">
+            <Image src={logo || "/placeholder.svg"} alt="Window Logo" fill className="object-contain" />
+          </div>
+        )}
         <div className="window-header-drag-area flex-1 ml-2 text-sm cursor-move">{title}</div>
         <div className="flex">
           <button
@@ -122,19 +137,35 @@ export default function WindowsWindow({ title, onClose, children, className, bac
           </button>
         </div>
       </div>
-      <div className="window-content bg-[#0c0c0c] text-white border-t-2 border-[#ece9d8] max-h-[70vh] overflow-auto relative">
-        {backgroundImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={backgroundImage || "/placeholder.svg"}
-              alt="Background"
-              fill
-              className="object-cover opacity-30"
-            />
+
+      {isNotepad ? (
+        // Estilo de Notepad para Windows XP
+        <div>
+          <div className="bg-[#ece9d8] border-b border-gray-400 px-2 py-1 text-sm">
+            <span className="mr-4">File</span>
+            <span className="mr-4">Edit</span>
+            <span className="mr-4">Format</span>
+            <span className="mr-4">View</span>
+            <span>Help</span>
           </div>
-        )}
-        <div className="relative z-10">{children}</div>
-      </div>
+          <div className="window-content">{children}</div>
+        </div>
+      ) : (
+        // Estilo normal para otras ventanas
+        <div className="window-content bg-[#0c0c0c] text-white border-t-2 border-[#ece9d8] max-h-[70vh] overflow-auto relative">
+          {backgroundImage && (
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={backgroundImage || "/placeholder.svg"}
+                alt="Background"
+                fill
+                className="object-cover opacity-30"
+              />
+            </div>
+          )}
+          <div className="relative z-10">{children}</div>
+        </div>
+      )}
     </div>
   )
 }

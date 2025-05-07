@@ -7,8 +7,12 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "KryptoBaby777 - $KB",
-  description: "$KB is just for fun and to glorify KryptoBaby777, have fun.",
+  title: "MONI on Monad - $MONI",
+  description: "MONI is a mischievous yet brilliant character from the Monad world.",
+  icons: {
+    icon: "/moni-logo.png",
+    apple: "/moni-logo.png",
+  },
     generator: 'v0.dev'
 }
 
